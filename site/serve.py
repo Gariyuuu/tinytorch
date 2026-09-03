@@ -24,12 +24,8 @@ class Handler(http.server.SimpleHTTPRequestHandler):
     def translate_path(self, path: str) -> str:
         clean = path.split("?", 1)[0].split("#", 1)[0].rstrip("/") or "/"
 
-        # rewrite: /docs/:slug -> /docs.html
-        parts = [p for p in clean.split("/") if p]
-        if len(parts) == 2 and parts[0] == "docs":
-            return str(ROOT / "docs.html")
-
-        # cleanUrls: /docs -> /docs.html
+        # cleanUrls: /docs -> docs.html, /docs/autograd -> docs/autograd.html
+        # (build.sh emits a real file for every doc route, so nothing else is needed)
         if clean != "/" and not Path(clean).suffix:
             candidate = ROOT / (clean.lstrip("/") + ".html")
             if candidate.is_file():
