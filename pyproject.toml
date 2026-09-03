@@ -1,0 +1,101 @@
+[build-system]
+requires = ["hatchling>=1.21"]
+build-backend = "hatchling.build"
+
+[project]
+name = "tinytorch"
+version = "0.1.0"
+description = "An educational deep-learning framework: reverse-mode autodiff, tensors, nn and optimizers built from scratch on NumPy."
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.10"
+authors = [{ name = "Gary Wang" }]
+keywords = ["autograd", "automatic-differentiation", "deep-learning", "education", "numpy"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Developers",
+  "Intended Audience :: Education",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+  "Typing :: Typed",
+]
+
+# NumPy is the only runtime dependency, on purpose: TinyTorch owns the
+# autograd and uses NumPy purely as its numerical kernel.
+dependencies = ["numpy>=1.24"]
+
+[project.optional-dependencies]
+# PyTorch is a *test* dependency only. It is never imported by the library;
+# the parity tests skip cleanly if it is absent.
+test = ["pytest>=7.4", "torch>=2.0"]
+dev = ["pytest>=7.4", "torch>=2.0", "ruff>=0.6", "mypy>=1.10"]
+
+[project.urls]
+Homepage = "https://github.com/Gariyuuu/tinytorch"
+Repository = "https://github.com/Gariyuuu/tinytorch"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/tinytorch"]
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+testpaths = ["tests"]
+addopts = "-q --strict-markers --strict-config"
+markers = [
+  "slow: tests that take more than a second (training loops, full gradchecks)",
+  "torch: tests that compare against PyTorch and skip when it is unavailable",
+]
+filterwarnings = ["error::RuntimeWarning"]
+
+[tool.ruff]
+line-length = 100
+src = ["src", "tests"]
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "SIM", "RUF"]
+ignore = [
+  "E741",    # `l` is a fine name for a loss/layer index in this domain
+  "B008",    # not applicable: no framework-style default-call args here
+  "RUF002",  # docstrings use real mathematical unicode on purpose
+  "RUF003",
+]
+
+[tool.ruff.lint.per-file-ignores]
+# ops.py deliberately shadows sum/max/abs/pow to mirror the array API.
+"src/tinytorch/ops.py" = ["A001", "A002"]
+"src/tinytorch/__init__.py" = ["F401"]
+"src/tinytorch/nn/__init__.py" = ["F401"]
+"src/tinytorch/optim/__init__.py" = ["F401"]
+"tests/*" = ["E501"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["tinytorch"]
+
+[tool.mypy]
+python_version = "3.10"
+files = ["src/tinytorch"]
+ignore_missing_imports = true
+warn_unused_configs = true
+warn_redundant_casts = true
+no_implicit_optional = true
+# The Tensor API is intentionally duck-typed at the boundary (it accepts
+# scalars, lists and ndarrays everywhere a Tensor is accepted), so we type-check
+# for real errors rather than demanding total annotation coverage.
+disallow_untyped_defs = false
+check_untyped_defs = true
+
+# Every Function subclass narrows the base's variadic `forward(ctx, *args,
+# **kwargs)` to its own concrete signature. That is the point of the
+# abstraction -- and how torch.autograd.Function works too -- but it is a
+# Liskov violation mypy is right to flag in general, so the check is disabled
+# for this one module rather than project-wide.
+[[tool.mypy.overrides]]
+module = ["tinytorch.ops"]
+disable_error_code = ["override"]
+
