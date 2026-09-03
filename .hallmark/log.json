@@ -1,0 +1,13 @@
+[
+  {
+    "date": "2026-09-03",
+    "macrostructure": "Workbench",
+    "theme": "Cobalt",
+    "theme_axes": "cool light / grotesk-sans / electric cobalt",
+    "genre": "modern-minimal",
+    "nav": "N13 bordered + working ⌘K",
+    "footer": "Ft2 inline",
+    "enrichment": "none — real code and real measured terminal output",
+    "brief": "TinyTorch docs site · educational deep-learning framework (autodiff on NumPy)"
+  }
+]

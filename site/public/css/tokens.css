@@ -1,0 +1,112 @@
+/* Hallmark · genre: modern-minimal · theme: Cobalt
+ * axes — paper band: cool light (L 98.5%) · display style: grotesk-sans · accent hue: electric cobalt
+ *
+ * Every colour, font, space, size, easing and radius used anywhere in this site
+ * is declared here and referenced by name. No file below this one is permitted
+ * to inline an oklch()/hex value or a bare font-family.
+ */
+
+:root {
+  /* ---- Paper and ink -------------------------------------------------- */
+  /* Cool engineered near-white, never #fff. Ink is cool charcoal, never #000. */
+  --color-paper:      oklch(98.5% 0.004 250);
+  --color-paper-2:    oklch(96.6% 0.005 252);
+  --color-paper-3:    oklch(94.2% 0.006 253);
+  --color-ink:        oklch(24% 0.020 258);
+  --color-ink-2:      oklch(34% 0.018 257);
+  --color-ink-3:      oklch(52% 0.015 257);
+  --color-ink-4:      oklch(63% 0.012 257);
+
+  /* ---- Hairlines ------------------------------------------------------ */
+  /* Depth comes from ruler-drawn borders, never from shadow or blur. */
+  --color-rule:       oklch(91% 0.006 254);
+  --color-rule-2:     oklch(85% 0.008 254);
+  --color-rule-dark:  oklch(32% 0.014 260);
+
+  /* ---- The one dark band ---------------------------------------------- */
+  --color-graphite:   oklch(22% 0.016 260);
+  --color-graphite-2: oklch(19% 0.016 260);
+  --color-on-dark:    oklch(93% 0.006 254);
+  --color-on-dark-2:  oklch(74% 0.010 256);
+  --color-on-dark-3:  oklch(58% 0.012 257);
+
+  /* ---- The single signal accent --------------------------------------- */
+  /* Electric cobalt. Used on < 5% of any viewport: one button, focus rings,
+     link underlines, the PASS chip, the active nav item. Never a flood. */
+  --color-accent:      oklch(58% 0.20 256);
+  --color-accent-hi:   oklch(52% 0.20 256);
+  /* The signal accent at 58% measures 4.17:1 on paper — fine for a button
+     surface or a focus ring (needs 3:1) but short of the 4.5:1 AA floor for
+     body-size text. Anything that renders the accent AS TEXT uses this darker
+     step, which measures 5.32:1. */
+  --color-accent-text: oklch(52% 0.20 256);
+  --color-accent-lift: oklch(72% 0.16 256);
+  --color-accent-ink:  oklch(99% 0.004 250);
+  --color-accent-wash: oklch(58% 0.20 256 / 0.08);
+
+  /* Syntax roles for code surfaces. */
+  --color-tok-key:    oklch(74% 0.14 256);
+  --color-tok-str:    oklch(84% 0.075 175);
+  --color-tok-num:    oklch(82% 0.11 82);
+  --color-tok-com:    oklch(52% 0.012 257);
+  --color-tok-fn:     oklch(88% 0.055 300);
+
+  /* ---- Type ----------------------------------------------------------- */
+  --font-display: "Space Grotesk", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-body:    "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono:    "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  --text-xs:        0.75rem;
+  --text-sm:        0.8125rem;
+  --text-base:      0.9375rem;
+  --text-md:        1.0625rem;
+  --text-lg:        1.25rem;
+  --text-xl:        1.5rem;
+  --text-2xl:       1.875rem;
+  --text-3xl:       2.25rem;
+  --text-4xl:       clamp(2rem, 1.4rem + 2.4vw, 3rem);
+  --text-display-s: clamp(2.4rem, 1.6rem + 3.2vw, 3.75rem);
+  --text-display:   clamp(2.5rem, 1.55rem + 3.6vw, 3.9rem);
+  --text-figure:    clamp(2.75rem, 1.5rem + 5vw, 5rem);
+
+  --tracking-tight:  -0.022em;
+  --tracking-tighter:-0.032em;
+  --tracking-mono:    0.06em;
+  --leading-tight:   1.08;
+  --leading-snug:    1.32;
+  --leading-body:    1.68;
+
+  /* ---- 4pt spacing scale ---------------------------------------------- */
+  --space-3xs: 0.25rem;
+  --space-2xs: 0.5rem;
+  --space-xs:  0.75rem;
+  --space-sm:  1rem;
+  --space-md:  1.5rem;
+  --space-lg:  2rem;
+  --space-xl:  3rem;
+  --space-2xl: 4rem;
+  --space-3xl: 6rem;
+  --space-4xl: 8rem;
+
+  /* ---- Geometry ------------------------------------------------------- */
+  /* Drawn with a ruler: 6px on controls, 10px on code cards. Never pills. */
+  --radius-sm:   4px;
+  --radius-md:   6px;
+  --radius-lg:   10px;
+  --rule-hair:   1px;
+  --measure:     68ch;
+  --measure-doc: 74ch;
+  --shell:       1200px;
+  --shell-doc:   1320px;
+
+  /* ---- Motion --------------------------------------------------------- */
+  --ease-out:    cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in:     cubic-bezier(0.4, 0, 1, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast:    140ms;
+  --dur-mid:     240ms;
+  --dur-slow:    600ms;
+
+  --z-nav:     40;
+  --z-overlay: 60;
+}

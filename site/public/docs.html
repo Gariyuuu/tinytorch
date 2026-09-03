@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Docs — TinyTorch</title>
+<meta name="description" content="TinyTorch documentation: reverse-mode automatic differentiation and framework architecture." />
+<meta name="color-scheme" content="light" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.11/katex.min.css" integrity="sha512-aOFyMMzZF7l7ei3vOKgQiRhZnYqk9YC/uMzl4T0j5N5D3Kul+QAFU8ssENDRMAqr/lxDOjMF69dSYJ8HYqY+WQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link rel="stylesheet" href="/css/tokens.css" />
+<link rel="stylesheet" href="/css/site.css" />
+<link rel="stylesheet" href="/css/docs.css" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%231d4ed8'/><path d='M9 21V11h4.6M9 16h4M19 11v10M17 11h5' stroke='white' stroke-width='2.2' fill='none' stroke-linecap='square'/></svg>" />
+</head>
+<body>
+<a class="skip" href="#prose">Skip to content</a>
+
+<header class="nav">
+  <div class="shell nav__in">
+    <a class="nav__mark" href="/">Tiny<b>Torch</b></a>
+    <nav class="nav__links" aria-label="Primary">
+      <a class="nav__link" href="/#tour">Tour</a>
+      <a class="nav__link" href="/#verification">Verification</a>
+      <a class="nav__link" href="/#benchmarks">Benchmarks</a>
+      <a class="nav__link" href="/docs" aria-current="page">Docs</a>
+    </nav>
+    <div class="nav__right">
+      <button class="kbd-trigger" id="pal-open" aria-haspopup="dialog" aria-label="Open command palette">
+        <span>Search</span><kbd>⌘K</kbd>
+      </button>
+      <a class="btn btn--primary" href="https://github.com/Gariyuuu/tinytorch">GitHub</a>
+    </div>
+  </div>
+</header>
+
+<div class="doc__shell">
+  <div class="doc">
+    <aside class="toc">
+      <nav class="toc__switch" id="toc-switch" aria-label="Documents"></nav>
+      <p class="mono-label toc__head">On this page</p>
+      <ul class="toc__list" id="toc-list"></ul>
+    </aside>
+
+    <div>
+      <h1 id="doc-title" class="prose u-wide">Docs</h1>
+      <article class="prose" id="prose">
+        <div class="doc__state"><p>Loading…</p></div>
+      </article>
+      <div class="doc__foot">
+        <span class="mono-label">Rendered from the repository's markdown</span>
+        <a href="https://github.com/Gariyuuu/tinytorch/tree/main/docs">View source on GitHub →</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="foot">
+  <div class="shell foot__in">
+    <span class="foot__note">TinyTorch — MIT licensed. Built by Gary Wang.</span>
+    <nav class="foot__links" aria-label="Footer">
+      <a href="/">Home</a>
+      <a href="https://github.com/Gariyuuu/tinytorch">GitHub</a>
+      <a href="https://github.com/Gariyuuu/tinytorch/blob/main/LICENSE">License</a>
+    </nav>
+  </div>
+</footer>
+
+<div class="pal" id="pal" hidden role="dialog" aria-modal="true" aria-label="Search TinyTorch">
+  <div class="pal__scrim" data-pal-close></div>
+  <div class="pal__box">
+    <input class="pal__input" id="pal-input" type="text" placeholder="Search docs and sections…" autocomplete="off" spellcheck="false" aria-controls="pal-list" />
+    <ul class="pal__list" id="pal-list" role="listbox" aria-label="Results"></ul>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.11/katex.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/bash.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.1/mermaid.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="/js/palette.js" defer></script>
+<script src="/js/docs.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>TinyTorch — autodiff from scratch, verified against PyTorch</title>
+<meta name="description" content="An educational deep-learning framework: reverse-mode automatic differentiation, tensors, nn and optimizers implemented from scratch on NumPy. 391 tests; agreement with PyTorch at machine epsilon." />
+<meta name="color-scheme" content="light" />
+<meta property="og:title" content="TinyTorch — autodiff from scratch" />
+<meta property="og:description" content="Reverse-mode automatic differentiation implemented from scratch on NumPy. Verified against PyTorch at rtol=1e-10; measured agreement ≤ 2.8e-16." />
+<meta property="og:type" content="website" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="/css/tokens.css" />
+<link rel="stylesheet" href="/css/site.css" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%231d4ed8'/><path d='M9 21V11h4.6M9 16h4M19 11v10M17 11h5' stroke='white' stroke-width='2.2' fill='none' stroke-linecap='square'/></svg>" />
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="nav">
+  <div class="shell nav__in">
+    <a class="nav__mark" href="/">Tiny<b>Torch</b></a>
+    <nav class="nav__links" aria-label="Primary">
+      <a class="nav__link" href="#tour">Tour</a>
+      <a class="nav__link" href="#verification">Verification</a>
+      <a class="nav__link" href="#benchmarks">Benchmarks</a>
+      <a class="nav__link" href="/docs">Docs</a>
+    </nav>
+    <div class="nav__right">
+      <button class="kbd-trigger" id="pal-open" aria-haspopup="dialog" aria-label="Open command palette">
+        <span>Search</span><kbd>⌘K</kbd>
+      </button>
+      <a class="btn btn--primary" href="https://github.com/Gariyuuu/tinytorch">GitHub</a>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ── Hero: title left, real measured output right ────────────────── -->
+  <section class="shell hero">
+    <div class="hero__grid">
+      <div>
+        <p class="hero__eyebrow"><span class="hero__tick"></span><span class="mono-label">v0.1.0 · MIT · NumPy only</span></p>
+        <h1>Autodiff from scratch, verified against PyTorch.</h1>
+        <p class="hero__lede">
+          TinyTorch implements reverse-mode automatic differentiation, a dynamic
+          computation graph, an <code>nn</code> API and optimizers in about 3,600 lines of
+          Python. NumPy supplies storage and arithmetic — <strong>every derivative rule,
+          the graph and the backward traversal are TinyTorch's own.</strong>
+        </p>
+        <div class="hero__cta">
+          <a class="btn btn--primary" href="/docs/autograd">Read how it works</a>
+          <a class="btn btn--ghost" href="https://github.com/Gariyuuu/tinytorch">View source</a>
+        </div>
+        <div class="hero__meta">
+          <div><b class="tnum">391</b><span class="mono-label">tests passing</span></div>
+          <div><b class="tnum">24</b><span class="mono-label">operators</span></div>
+          <div><b class="tnum">1</b><span class="mono-label">runtime dependency</span></div>
+        </div>
+      </div>
+
+      <div class="reveal">
+        <div class="code">
+          <div class="code__bar">
+            <span class="code__name">python examples/06_pytorch_equivalence.py</span>
+            <span class="chip">15/15 pass</span>
+          </div>
+<pre><code><span class="tok-c">architecture : 6 -&gt; 16 -&gt; 12 -&gt; 4 (tanh)   dtype: float64</span>
+
+<span class="tok-w">[1] forward output</span>
+  logits                     max|diff| = <span class="tok-n">4.441e-16</span>   <span class="tok-ok">PASS</span>
+<span class="tok-w">[2] loss</span>
+  cross-entropy              max|diff| = <span class="tok-n">4.441e-16</span>   <span class="tok-ok">PASS</span>
+<span class="tok-w">[3] parameter gradients</span>
+  grad 0.weight (16, 6)      max|diff| = <span class="tok-n">4.163e-17</span>   <span class="tok-ok">PASS</span>
+  grad 2.weight (12, 16)     max|diff| = <span class="tok-n">5.551e-17</span>   <span class="tok-ok">PASS</span>
+  grad 4.weight (4, 12)      max|diff| = <span class="tok-n">5.551e-17</span>   <span class="tok-ok">PASS</span>
+<span class="tok-w">[4] after one optimizer step</span>
+  SGD(lr=0.1, momentum=0.9)  max|diff| = <span class="tok-n">5.551e-17</span>   <span class="tok-ok">PASS</span>
+  Adam(lr=0.01)              max|diff| = <span class="tok-n">2.220e-16</span>   <span class="tok-ok">PASS</span>
+<span class="tok-w">[5] after 10 Adam steps</span>
+  after step 10              max|diff| = <span class="tok-n">2.776e-16</span>   <span class="tok-ok">PASS</span>
+
+<span class="tok-ok">15/15 checks passed at 1e-10</span><span class="caret" id="caret"></span></code></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Workbench tour ──────────────────────────────────────────────── -->
+  <section class="shell band" id="tour">
+    <div class="head">
+      <h2>What you actually write</h2>
+      <p>The API is small on purpose. Three things cover almost everything: build a tensor, call <code>backward()</code>, step an optimizer.</p>
+    </div>
+
+    <div class="step">
+      <div class="step__note">
+        <h3>Differentiate an expression</h3>
+        <p>Any tensor with <code>requires_grad</code> records the operations applied to it. Calling <code>backward()</code> on a scalar walks that record in reverse and fills in <code>.grad</code>.</p>
+        <p>Reuse and branching are handled by the traversal, not by you: a tensor feeding two consumers receives the sum of both gradients.</p>
+      </div>
+      <div class="step__demo reveal">
+        <div class="code">
+          <div class="code__bar"><span class="code__name">autograd.py</span></div>
+<pre><code><span class="tok-k">import</span> tinytorch <span class="tok-k">as</span> tt
+
+x = tt.<span class="tok-f">Tensor</span>([<span class="tok-n">1.0</span>, <span class="tok-n">2.0</span>, <span class="tok-n">3.0</span>], requires_grad=<span class="tok-k">True</span>)
+y = (x ** <span class="tok-n">2</span> + <span class="tok-n">3</span> * x).<span class="tok-f">sum</span>()
+y.<span class="tok-f">backward</span>()
+
+x.grad
+<span class="tok-c"># array([5., 7., 9.])   ==  2x + 3</span></code></pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="step step--flip">
+      <div class="step__note">
+        <h3>Train a network</h3>
+        <p><code>Module</code> discovers parameters by attribute assignment — writing <code>self.weight = Parameter(...)</code> <em>is</em> the registration. No metaclass, no registry.</p>
+        <p><code>zero_grad()</code> is required, not decorative: backward accumulates so that gradient accumulation over micro-batches works.</p>
+      </div>
+      <div class="step__demo reveal">
+        <div class="code">
+          <div class="code__bar"><span class="code__name">train.py</span></div>
+<pre><code><span class="tok-k">from</span> tinytorch <span class="tok-k">import</span> nn, optim
+
+model = nn.<span class="tok-f">Sequential</span>(
+    nn.<span class="tok-f">Linear</span>(<span class="tok-n">4</span>, <span class="tok-n">32</span>), nn.<span class="tok-f">ReLU</span>(),
+    nn.<span class="tok-f">Linear</span>(<span class="tok-n">32</span>, <span class="tok-n">3</span>),
+)
+opt = optim.<span class="tok-f">Adam</span>(model.<span class="tok-f">parameters</span>(), lr=<span class="tok-n">1e-2</span>)
+loss_fn = nn.<span class="tok-f">CrossEntropyLoss</span>()
+
+<span class="tok-k">for</span> epoch <span class="tok-k">in</span> <span class="tok-f">range</span>(<span class="tok-n">100</span>):
+    opt.<span class="tok-f">zero_grad</span>()          <span class="tok-c"># backward accumulates</span>
+    loss = <span class="tok-f">loss_fn</span>(<span class="tok-f">model</span>(x), y)
+    loss.<span class="tok-f">backward</span>()
+    opt.<span class="tok-f">step</span>()</code></pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step__note">
+        <h3>Check the gradients yourself</h3>
+        <p><code>gradcheck</code> compares the analytic gradient against a central finite difference of TinyTorch's own forward pass — no PyTorch involved.</p>
+        <p>It <em>refuses</em> float32 inputs. The error of a central difference is <code>O(h²) + O(ε/h)</code>, and float32's ε leaves no usable window for <code>h</code>. Silently returning garbage would be worse than raising.</p>
+      </div>
+      <div class="step__demo reveal">
+        <div class="code">
+          <div class="code__bar">
+            <span class="code__name">gradcheck.py</span>
+            <span class="chip">float64 only</span>
+          </div>
+<pre><code><span class="tok-k">import</span> numpy <span class="tok-k">as</span> np, tinytorch <span class="tok-k">as</span> tt
+
+x = tt.<span class="tok-f">randn</span>(<span class="tok-n">4</span>, <span class="tok-n">5</span>, requires_grad=<span class="tok-k">True</span>, dtype=np.float64)
+tt.<span class="tok-f">gradcheck</span>(<span class="tok-k">lambda</span> t: tt.<span class="tok-f">log_softmax</span>(t * <span class="tok-n">2</span>).<span class="tok-f">sum</span>(), [x])
+<span class="tok-c"># True</span>
+
+y = tt.<span class="tok-f">randn</span>(<span class="tok-n">4</span>, requires_grad=<span class="tok-k">True</span>, dtype=np.float32)
+tt.<span class="tok-f">gradcheck</span>(<span class="tok-k">lambda</span> t: t * <span class="tok-n">2</span>, [y])
+<span class="tok-c"># TypeError: float64 is required</span></code></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── The one dark band: verification ─────────────────────────────── -->
+  <section class="band band--dark" id="verification">
+    <div class="shell">
+      <div class="head">
+        <h2>How it is verified</h2>
+        <p>Correctness is established three independent ways. Every number below is measured, and reproducible from the repository.</p>
+      </div>
+
+      <div class="step">
+        <div class="step__note">
+          <h3>Against PyTorch, at machine epsilon</h3>
+          <p>
+            84 tests build the same computation in both frameworks from bit-identical
+            inputs and compare in float64 at <code>rtol=1e-10</code>. The completion test builds a
+            6→16→12→4 tanh MLP with identical weights and measures every stage:
+          </p>
+        </div>
+        <div class="step__demo">
+          <div class="rows">
+            <div class="row"><span class="row__k">Forward logits</span><span class="row__v tnum">4.4e-16</span></div>
+            <div class="row"><span class="row__k">Cross-entropy loss</span><span class="row__v tnum">4.4e-16</span></div>
+            <div class="row"><span class="row__k">Parameter gradients (all 6)</span><span class="row__v tnum">≤ 1.1e-16</span></div>
+            <div class="row"><span class="row__k">After one SGD / momentum / Adam step</span><span class="row__v tnum">≤ 2.2e-16</span></div>
+            <div class="row"><span class="row__k">After 10 Adam steps</span><span class="row__v tnum">2.8e-16</span></div>
+          </div>
+          <p class="mono-label u-mt-sm">five orders of magnitude inside the enforced tolerance</p>
+        </div>
+      </div>
+
+      <div class="step step--flip">
+        <div class="step__note">
+          <h3>Against finite differences, and against reality</h3>
+          <p>
+            101 tests check every operator numerically — framework-independent, so they
+            would catch an error TinyTorch and PyTorch happened to share. A deliberately
+            wrong derivative is included in the suite to prove the checker catches one.
+          </p>
+          <p>
+            17 more train real models and assert against known answers: recovered
+            generating parameters, the least-squares optimum, a held-out accuracy floor.
+            A control test confirms a linear model <em>fails</em> XOR — so the MLP's
+            success is attributable to the nonlinearity, not to an easy dataset.
+          </p>
+        </div>
+        <div class="step__demo">
+          <div class="rows">
+            <div class="row"><span class="row__k">Operators vs finite differences</span><span class="row__v tnum">101</span></div>
+            <div class="row"><span class="row__k">PyTorch parity</span><span class="row__v tnum">84</span></div>
+            <div class="row"><span class="row__k">Module, tensor, optimizer, serialization</span><span class="row__v tnum">189</span></div>
+            <div class="row"><span class="row__k">Real training convergence</span><span class="row__v tnum">17</span></div>
+            <div class="row"><span class="row__k">Total, all passing</span><span class="row__v tnum">391</span></div>
+            <div class="row"><span class="row__k">Passing with NumPy alone</span><span class="row__v tnum">307</span></div>
+          </div>
+          <p class="mono-label u-mt-sm">CI: Python 3.10–3.13 · Linux, macOS, Windows</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Benchmarks ──────────────────────────────────────────────────── -->
+  <section class="shell band" id="benchmarks">
+    <div class="head">
+      <h2>Overhead, measured</h2>
+      <p>
+        TinyTorch is not trying to be fast. The benchmark exists so the cost of a Python
+        autograd engine is a measured number rather than a guess. CPU, float64, best of
+        five repeats, <code>torch.set_num_threads(1)</code>.
+      </p>
+    </div>
+
+    <div class="table-wrap">
+      <table class="data">
+        <thead>
+          <tr><th scope="col">Workload</th><th scope="col" class="num">TinyTorch</th><th scope="col" class="num">PyTorch</th><th scope="col" class="num">Ratio</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>add</code>, 1×1</td><td class="num tnum">0.0062 ms</td><td class="num tnum">0.0095 ms</td><td class="num tnum hl">0.7×</td></tr>
+          <tr><td><code>matmul</code>, 32×32</td><td class="num tnum">0.0227 ms</td><td class="num tnum">0.0239 ms</td><td class="num tnum">1.0×</td></tr>
+          <tr><td><code>matmul</code>, 256×256</td><td class="num tnum">0.355 ms</td><td class="num tnum">0.341 ms</td><td class="num tnum">1.0×</td></tr>
+          <tr><td><code>exp</code>, 256×256</td><td class="num tnum">0.313 ms</td><td class="num tnum">0.160 ms</td><td class="num tnum">2.0×</td></tr>
+          <tr><td>Training step, 698 params</td><td class="num tnum">0.133 ms</td><td class="num tnum">0.112 ms</td><td class="num tnum">1.2×</td></tr>
+          <tr><td>Training step, 2.1 M params</td><td class="num tnum">37.6 ms</td><td class="num tnum">24.2 ms</td><td class="num tnum">1.6×</td></tr>
+          <tr><td>1000-op chain, fwd + bwd</td><td class="num tnum">6.20 ms</td><td class="num tnum">2.62 ms</td><td class="num tnum">2.4×</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="step u-ruled">
+      <div class="step__note">
+        <h3>The result contradicted the prediction</h3>
+        <p>The expected finding was the standard one: fixed Python overhead amortises away as models grow. The measurements show the opposite.</p>
+      </div>
+      <div class="step__demo">
+        <ul class="limits">
+          <li><b>Faster at 1×1</b><span>Not a win worth claiming — PyTorch's full C++ dispatcher costs more per call than a Python path supporting exactly one backend. Both sit in the same microsecond band.</span></li>
+          <li><b>Parity where BLAS runs</b><span><code>matmul</code> is 1.0× at every size tested. Both frameworks call essentially the same kernel.</span></li>
+          <li><b>Slower at scale</b><span>The training-step ratio <em>rises</em> from 1.2× to 1.6×. What TinyTorch loses at scale is kernel efficiency and extra temporaries, not dispatch.</span></li>
+          <li><b>Linear in graph depth</b><span>~6 µs per op, flat across 10, 100 and 1000 ops — no accidental quadratic behaviour in the traversal.</span></li>
+          <li><b>A correction</b><span>The first version of this benchmark timed tensor construction along with dispatch. Leaves are now built outside the timed region; the numbers above are from the corrected run.</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Scope ───────────────────────────────────────────────────────── -->
+  <section class="shell band" id="scope">
+    <div class="head">
+      <h2>Scope is frozen</h2>
+      <p>
+        TinyTorch exists to demonstrate how autodiff, tensors, neural-network abstractions
+        and optimizers work, in code short enough to read end to end. Everything below is
+        absent <em>by design</em> — not a roadmap, not a TODO. Use PyTorch for real work.
+      </p>
+    </div>
+    <ul class="limits">
+      <li><b>No double backward</b><span>Gradients are <code>ndarray</code>, not <code>Tensor</code>, so the backward pass records no graph. Rules out gradient penalties and MAML-style meta-learning.</span></li>
+      <li><b>CPU only</b><span>No CUDA, MPS or ROCm, and no device abstraction. There is no <code>.to(device)</code> and there is not meant to be one.</span></li>
+      <li><b>No convolutions or recurrence</b><span>No <code>Conv2d</code>, <code>BatchNorm</code>, <code>LayerNorm</code>, <code>Embedding</code>, <code>LSTM</code> or attention. The op set covers dense networks.</span></li>
+      <li><b>No training infrastructure</b><span>No schedulers, no <code>DataLoader</code>, no distributed training, no mixed precision, no profiler.</span></li>
+      <li><b>No in-place mutation</b><span>There is no version counter, so mutating a tensor a saved context still references would silently corrupt its gradient.</span></li>
+      <li><b>Memory is not managed</b><span>Every saved tensor stays alive for the whole backward pass. No checkpointing, no rematerialisation.</span></li>
+    </ul>
+  </section>
+
+  <!-- ── Docs ────────────────────────────────────────────────────────── -->
+  <section class="shell band" id="docs">
+    <div class="head">
+      <h2>Read the internals</h2>
+      <p>Both documents are written to be read start to finish, with diagrams and derivations.</p>
+    </div>
+    <div class="cards">
+      <a class="card" href="/docs/autograd">
+        <span class="mono-label">Document</span>
+        <h3>Reverse-mode autodiff</h3>
+        <p>Why reverse mode and not forward, how the dynamic graph is recorded, the chain rule as implemented, topological traversal, gradient accumulation, and broadcast gradient reduction.</p>
+        <span class="card__go">Read →</span>
+      </a>
+      <a class="card" href="/docs/architecture">
+        <span class="mono-label">Document</span>
+        <h3>Architecture</h3>
+        <p>Layering and the import cycle, <code>Module</code>/<code>Parameter</code> discovery by attribute interception, optimizer state, initialization, and the pickle-free checkpoint format.</p>
+        <span class="card__go">Read →</span>
+      </a>
+    </div>
+
+    <div class="code u-mt-lg">
+      <div class="code__bar"><span class="code__name">install</span></div>
+<pre><code><span class="tok-c">$</span> git clone https://github.com/Gariyuuu/tinytorch &amp;&amp; <span class="tok-k">cd</span> tinytorch
+<span class="tok-c">$</span> python -m venv .venv &amp;&amp; <span class="tok-k">source</span> .venv/bin/activate
+<span class="tok-c">$</span> pip install -e <span class="tok-s">".[dev]"</span>
+<span class="tok-c">$</span> pytest
+<span class="tok-ok">391 passed</span></code></pre>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="shell foot__in">
+    <span class="foot__note">TinyTorch — MIT licensed. Built by Gary Wang.</span>
+    <nav class="foot__links" aria-label="Footer">
+      <a href="/docs">Docs</a>
+      <a href="https://github.com/Gariyuuu/tinytorch">GitHub</a>
+      <a href="https://github.com/Gariyuuu/tinytorch/blob/main/LICENSE">License</a>
+    </nav>
+  </div>
+</footer>
+
+<div class="pal" id="pal" hidden role="dialog" aria-modal="true" aria-label="Search TinyTorch">
+  <div class="pal__scrim" data-pal-close></div>
+  <div class="pal__box">
+    <input class="pal__input" id="pal-input" type="text" placeholder="Search docs and sections…" autocomplete="off" spellcheck="false" aria-controls="pal-list" />
+    <ul class="pal__list" id="pal-list" role="listbox" aria-label="Results"></ul>
+  </div>
+</div>
+
+<script src="/js/palette.js" defer></script>
+<script src="/js/site.js" defer></script>
+</body>
+</html>

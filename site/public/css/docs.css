@@ -1,0 +1,169 @@
+/* Docs reader — prose surface for the rendered markdown.
+ * Same Cobalt tokens; the only new geometry is the sticky TOC rail.
+ */
+
+.doc {
+  display: grid;
+  gap: var(--space-xl);
+  padding-block: var(--space-xl) var(--space-3xl);
+  align-items: start;
+}
+/* Grid children default to min-width:auto, so a wide <pre> or <table> inside the
+   prose column forces the whole track wider than the viewport — and the TOC,
+   sharing the track, gets dragged out with it. Both children must be allowed to
+   shrink; the scrolling then happens inside .table-wrap / pre where it belongs. */
+.doc > * { min-width: 0; }
+@media (min-width: 1040px) {
+  .doc { grid-template-columns: minmax(0, 15rem) minmax(0, 1fr); gap: var(--space-2xl); }
+}
+.doc__shell { width: 100%; max-width: var(--shell-doc); margin-inline: auto; padding-inline: var(--space-md); }
+@media (min-width: 900px) { .doc__shell { padding-inline: var(--space-lg); } }
+
+/* ── Sticky TOC rail ──────────────────────────────────────────────────── */
+.toc { min-width: 0; }
+@media (min-width: 1040px) {
+  .toc { position: sticky; top: calc(58px + var(--space-md)); max-height: calc(100vh - 58px - var(--space-xl)); overflow-y: auto; }
+}
+.toc__switch { display: flex; flex-wrap: wrap; gap: var(--space-3xs); margin-bottom: var(--space-md); }
+.toc__switch a {
+  text-decoration: none; font-size: var(--text-sm); font-weight: 500;
+  color: var(--color-ink-3); padding: var(--space-3xs) var(--space-2xs);
+  border: var(--rule-hair) solid var(--color-rule); border-radius: var(--radius-md);
+  white-space: nowrap;
+  transition: border-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+}
+.toc__switch a:hover { border-color: var(--color-ink-3); color: var(--color-ink); }
+.toc__switch a[aria-current="page"] { color: var(--color-accent-text); border-color: var(--color-accent); }
+
+.toc__head { margin-bottom: var(--space-2xs); }
+.toc__list { list-style: none; margin: 0; padding: 0; border-left: var(--rule-hair) solid var(--color-rule); }
+.toc__list a {
+  display: block; text-decoration: none;
+  font-size: var(--text-sm); line-height: 1.4; color: var(--color-ink-3);
+  padding: var(--space-3xs) var(--space-2xs);
+  border-left: 2px solid transparent; margin-left: -1px;
+  transition: color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
+}
+.toc__list a:hover { color: var(--color-ink); }
+.toc__list a.is-active { color: var(--color-accent-text); border-left-color: var(--color-accent); }
+.toc__list a[data-depth="3"] { padding-left: var(--space-sm); font-size: var(--text-xs); }
+
+/* ── Prose ────────────────────────────────────────────────────────────── */
+.prose { min-width: 0; max-width: var(--measure-doc); }
+.prose > *:first-child { margin-top: 0; }
+
+.prose h1 { font-size: var(--text-4xl); font-weight: 600; letter-spacing: var(--tracking-tighter); margin-bottom: var(--space-md); }
+.prose h2 {
+  font-size: var(--text-2xl); font-weight: 600; margin-top: var(--space-2xl); margin-bottom: var(--space-sm);
+  padding-top: var(--space-md); border-top: var(--rule-hair) solid var(--color-rule);
+}
+.prose h3 { font-size: var(--text-lg); font-weight: 600; margin-top: var(--space-lg); margin-bottom: var(--space-2xs); }
+.prose h4 { font-size: var(--text-md); font-weight: 600; margin-top: var(--space-md); margin-bottom: var(--space-2xs); }
+
+.prose p { margin-block: var(--space-sm); }
+.prose ul, .prose ol { margin-block: var(--space-sm); padding-left: var(--space-md); }
+.prose li { margin-block: var(--space-3xs); }
+.prose li > ul, .prose li > ol { margin-block: var(--space-3xs); }
+.prose strong { color: var(--color-ink); font-weight: 600; }
+.prose em { font-style: italic; }
+
+.prose a { color: var(--color-accent-text); text-decoration: none; border-bottom: 1px solid var(--color-accent-wash); }
+.prose a:hover { border-bottom-color: var(--color-accent); }
+
+.prose hr { border: 0; border-top: var(--rule-hair) solid var(--color-rule); margin-block: var(--space-xl); }
+/* The source markdown puts a `---` before major sections and h2 already draws
+   its own rule — without this the reader gets two hairlines and ~7rem of dead
+   space between every section. */
+.prose hr + h2 { border-top: none; padding-top: 0; margin-top: var(--space-lg); }
+.prose hr:has(+ h2) { margin-bottom: var(--space-lg); }
+
+.prose blockquote {
+  margin: var(--space-md) 0; padding: var(--space-2xs) 0 var(--space-2xs) var(--space-md);
+  border-left: 2px solid var(--color-accent); color: var(--color-ink-3);
+}
+.prose blockquote p { margin-block: var(--space-3xs); }
+
+/* Inline code */
+.prose :not(pre) > code {
+  font-family: var(--font-mono); font-size: 0.86em;
+  background: var(--color-paper-3); color: var(--color-ink);
+  padding: 2px 5px; border-radius: var(--radius-sm);
+  overflow-wrap: anywhere;
+}
+
+/* Block code */
+.prose pre {
+  margin-block: var(--space-md);
+  background: var(--color-graphite);
+  border: var(--rule-hair) solid var(--color-rule-dark);
+  border-radius: var(--radius-lg);
+  padding: var(--space-md);
+  overflow-x: auto; -webkit-overflow-scrolling: touch;
+}
+.prose pre code {
+  font-family: var(--font-mono); font-size: var(--text-sm); line-height: 1.7;
+  color: var(--color-on-dark-2); background: none; padding: 0; border-radius: 0;
+}
+
+/* highlight.js token roles, mapped onto Cobalt's palette */
+.hljs-keyword, .hljs-built_in, .hljs-literal, .hljs-type { color: var(--color-tok-key); }
+.hljs-string, .hljs-meta .hljs-string { color: var(--color-tok-str); }
+.hljs-number { color: var(--color-tok-num); }
+.hljs-comment { color: var(--color-tok-com); font-style: italic; }
+.hljs-title, .hljs-title.function_, .hljs-function .hljs-title { color: var(--color-tok-fn); }
+.hljs-attr, .hljs-attribute, .hljs-variable, .hljs-params { color: var(--color-on-dark); }
+.hljs-meta { color: var(--color-tok-com); }
+
+/* Tables */
+.prose .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin-block: var(--space-md); }
+.prose table { border-collapse: collapse; width: 100%; font-size: var(--text-sm); min-width: 460px; }
+.prose th, .prose td {
+  text-align: left; vertical-align: top;
+  padding: var(--space-2xs) var(--space-sm) var(--space-2xs) 0;
+  border-bottom: var(--rule-hair) solid var(--color-rule);
+}
+.prose th {
+  font-family: var(--font-mono); font-size: var(--text-xs); font-weight: 500;
+  letter-spacing: var(--tracking-mono); text-transform: uppercase; color: var(--color-ink-3);
+  border-bottom-color: var(--color-rule-2);
+}
+.prose td code { white-space: nowrap; }
+
+/* Mermaid diagrams */
+.prose .mermaid {
+  margin-block: var(--space-lg);
+  padding: var(--space-md);
+  border: var(--rule-hair) solid var(--color-rule);
+  border-radius: var(--radius-lg);
+  background: var(--color-paper-2);
+  overflow-x: auto;
+  text-align: center;
+}
+.prose .mermaid[data-processed] svg { max-width: 100%; height: auto; }
+.prose .mermaid-error {
+  font-family: var(--font-mono); font-size: var(--text-xs);
+  color: var(--color-ink-3); text-align: left;
+}
+
+/* KaTeX */
+.prose .katex { font-size: 1.02em; }
+.prose .katex-display { margin-block: var(--space-md); overflow-x: auto; overflow-y: hidden; padding-block: var(--space-3xs); }
+
+/* Heading anchors */
+.prose .anchor {
+  margin-left: var(--space-2xs); color: var(--color-ink-4); text-decoration: none;
+  border: 0; font-weight: 400; opacity: 0; font-size: 0.8em;
+  transition: opacity var(--dur-fast) var(--ease-out);
+}
+.prose h2:hover .anchor, .prose h3:hover .anchor, .anchor:focus-visible { opacity: 1; }
+
+/* Loading / error states */
+.doc__state { padding-block: var(--space-2xl); color: var(--color-ink-3); }
+.doc__state code { font-family: var(--font-mono); font-size: 0.9em; }
+
+.doc__foot {
+  margin-top: var(--space-2xl); padding-top: var(--space-md);
+  border-top: var(--rule-hair) solid var(--color-rule);
+  display: flex; flex-wrap: wrap; gap: var(--space-sm) var(--space-md); align-items: center;
+}
+.doc__foot a { font-size: var(--text-sm); color: var(--color-accent-text); text-decoration: none; white-space: nowrap; }

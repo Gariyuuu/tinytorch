@@ -27,6 +27,10 @@ coverage.xml
 *.ttz
 benchmarks/results/
 
+# Copied out of the repo by site/build.sh at deploy time — README.md and
+# docs/*.md are the source of truth, so the copies must not be committed.
+site/public/content/
+
 # OS / editor
 .DS_Store
 Thumbs.db
