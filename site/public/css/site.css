@@ -376,3 +376,21 @@ ul.limits { list-style: none; margin: 0; padding: 0; }
 .band--dark .step__note h3 { color: var(--color-on-dark); }
 .band--dark .step__note p  { color: var(--color-on-dark-2); }
 .band--dark .step__note code { background: var(--color-graphite-2); color: var(--color-on-dark); }
+
+/* ============================================================================
+ * docs-platform reconciliation
+ * The shared platform supplies the theme toggle, copy controls and the global
+ * motion guard. This site keeps its own shell, nav and ⌘K palette.
+ * ========================================================================== */
+
+/* The theme toggle sits with the other nav controls. */
+.nav__right .dp-theme { margin-left: 0.25rem; }
+
+/* Code blocks converted to figures keep this site's own surface and its
+ * hand-authored token colours; only the chrome comes from the platform. */
+.dp-code { background: var(--color-graphite); border-color: var(--color-rule-dark); }
+.dp-code__bar { background: var(--color-graphite-2); border-color: var(--color-rule-dark); }
+.dp-code__lang { color: var(--color-on-dark-3); }
+.dp-code code { color: var(--color-on-dark); }
+.dp-code .dp-copy { color: var(--color-on-dark-3); }
+.dp-code .dp-copy:hover { color: var(--color-on-dark); background: var(--color-graphite); border-color: var(--color-rule-dark); }

@@ -167,3 +167,11 @@
   display: flex; flex-wrap: wrap; gap: var(--space-sm) var(--space-md); align-items: center;
 }
 .doc__foot a { font-size: var(--text-sm); color: var(--color-accent-text); text-decoration: none; white-space: nowrap; }
+
+/* Copy controls floated over highlight.js blocks in the rendered prose. */
+.prose .dp-prewrap > .dp-copy {
+  background: var(--color-paper-2);
+  border-color: var(--color-rule);
+  color: var(--color-ink-3);
+}
+.prose .dp-prewrap > .dp-copy:hover { color: var(--color-ink); border-color: var(--color-rule-2); }

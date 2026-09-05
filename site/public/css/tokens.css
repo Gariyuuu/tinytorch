@@ -110,3 +110,80 @@
   --z-nav:     40;
   --z-overlay: 60;
 }
+
+/* ——— dark ————————————————————————————————————————————————————
+ * Cobalt inverted. The graphite band — the page's one dark beat — inverts to
+ * a lighter panel so it keeps its role as a contrasting surface. The syntax
+ * palette is re-tuned rather than reused: the light-mode token colours are
+ * too dark to read on a dark code surface.
+ */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --color-paper:       oklch(17% 0.014 258);
+    --color-paper-2:     oklch(21% 0.015 258);
+    --color-paper-3:     oklch(25% 0.016 258);
+    --color-ink:         oklch(96% 0.005 252);
+    --color-ink-2:       oklch(86% 0.008 254);
+    --color-ink-3:       oklch(72% 0.011 255);
+    --color-ink-4:       oklch(60% 0.012 256);
+    --color-rule:        oklch(30% 0.012 256);
+    --color-rule-2:      oklch(40% 0.014 256);
+    --color-rule-dark:   oklch(44% 0.015 258);
+    --color-accent:      oklch(72% 0.16 256);
+    --color-accent-hi:   oklch(80% 0.14 256);
+    --color-accent-lift: oklch(62% 0.18 256);
+    --color-accent-text: oklch(80% 0.13 256);
+    --color-accent-ink:  oklch(16% 0.02 258);
+    --color-accent-wash: oklch(72% 0.16 256 / 0.14);
+    --color-graphite:    oklch(26% 0.017 260);
+    --color-graphite-2:  oklch(31% 0.017 260);
+    --color-on-dark:     oklch(96% 0.005 252);
+    --color-on-dark-2:   oklch(84% 0.009 254);
+    --color-on-dark-3:   oklch(70% 0.011 255);
+    --color-tok-com:     oklch(64% 0.020 258);
+    --color-tok-key:     oklch(78% 0.135 300);
+    --color-tok-str:     oklch(80% 0.110 152);
+    --color-tok-num:     oklch(80% 0.100 70);
+    --color-tok-fn:      oklch(80% 0.120 235);
+  }
+}
+:root[data-theme="dark"] {
+  --color-paper:       oklch(17% 0.014 258);
+  --color-paper-2:     oklch(21% 0.015 258);
+  --color-paper-3:     oklch(25% 0.016 258);
+  --color-ink:         oklch(96% 0.005 252);
+  --color-ink-2:       oklch(86% 0.008 254);
+  --color-ink-3:       oklch(72% 0.011 255);
+  --color-ink-4:       oklch(60% 0.012 256);
+  --color-rule:        oklch(30% 0.012 256);
+  --color-rule-2:      oklch(40% 0.014 256);
+  --color-rule-dark:   oklch(44% 0.015 258);
+  --color-accent:      oklch(72% 0.16 256);
+  --color-accent-hi:   oklch(80% 0.14 256);
+  --color-accent-lift: oklch(62% 0.18 256);
+  --color-accent-text: oklch(80% 0.13 256);
+  --color-accent-ink:  oklch(16% 0.02 258);
+  --color-accent-wash: oklch(72% 0.16 256 / 0.14);
+  --color-graphite:    oklch(26% 0.017 260);
+  --color-graphite-2:  oklch(31% 0.017 260);
+  --color-on-dark:     oklch(96% 0.005 252);
+  --color-on-dark-2:   oklch(84% 0.009 254);
+  --color-on-dark-3:   oklch(70% 0.011 255);
+  --color-tok-com:     oklch(64% 0.020 258);
+  --color-tok-key:     oklch(78% 0.135 300);
+  --color-tok-str:     oklch(80% 0.110 152);
+  --color-tok-num:     oklch(80% 0.100 70);
+  --color-tok-fn:      oklch(80% 0.120 235);
+}
+
+/* ——— token bridge — TinyTorch's names onto the platform vocabulary ——— */
+:root {
+  --color-muted:       var(--color-ink-3);
+  --color-neutral:     var(--color-ink-3);
+  --color-accent-soft: var(--color-accent-wash);
+  --color-focus:       var(--color-accent);
+  --text-2xs: 0.6875rem;
+  --dur-micro: var(--dur-fast, 130ms);
+  --dur-short: var(--dur-mid, 220ms);
+  --dur-long:  var(--dur-slow, 380ms);
+}

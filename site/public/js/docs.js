@@ -307,6 +307,9 @@
       buildToc();
       feedPalette();
       initMermaid();
+      // The prose is rendered at runtime, so the shared platform has to be
+      // told when there is new markup to give copy controls to.
+      if (window.DocsPlatform) window.DocsPlatform.enhance();
       if (window.location.hash) {
         var t = document.getElementById(window.location.hash.slice(1));
         if (t) t.scrollIntoView();
