@@ -24,6 +24,11 @@
   --dp-muted:     var(--color-muted,   #55504a);
   --dp-neutral:   var(--color-neutral, #6c665e);
   --dp-accent:    var(--color-accent,  #a8461f);
+  /* Secondary *text* is deliberately not --dp-neutral. Several sites in this
+   * family set a neutral light enough that 11-13px text on it measured
+   * 3.6-4.0:1 — under AA. Small copy uses the darker `muted` step; neutral is
+   * kept for rules, gutters, list markers and low-emphasis icons. */
+  --dp-secondary: var(--color-muted, var(--color-neutral, #55504a));
   --dp-accent-soft: var(--color-accent-soft, var(--color-accent-wash, #f6e5dc));
   --dp-focus:     var(--color-focus,   var(--color-accent, #a8461f));
 
@@ -165,7 +170,7 @@
   position: relative; display: inline-flex; align-items: center; gap: 0.4rem;
   padding: 0.5rem 0.65rem; min-height: 44px; border-radius: var(--dp-radius);
   font-size: 0.8125rem; font-weight: 500; letter-spacing: 0.01em;
-  color: var(--dp-neutral); text-decoration: none; white-space: nowrap;
+  color: var(--dp-secondary); text-decoration: none; white-space: nowrap;
   transition: color var(--dp-dur-1) var(--dp-ease), background-color var(--dp-dur-1) var(--dp-ease);
 }
 .dp-bar__links a:hover { color: var(--dp-ink); background: var(--dp-bg-2); }
@@ -177,7 +182,7 @@
   font-size: 0.6875rem; font-variant-numeric: tabular-nums;
   padding: 0.25rem 0.5rem; border-radius: 999px;
   border: var(--dp-hair) solid var(--dp-rule);
-  background: var(--dp-bg-2); color: var(--dp-neutral);
+  background: var(--dp-bg-2); color: var(--dp-secondary);
   letter-spacing: 0.02em; white-space: nowrap; flex: none;
 }
 
@@ -189,7 +194,7 @@
   flex: none;
   width: 40px; height: 40px; padding: 0;
   border: var(--dp-hair) solid transparent; border-radius: var(--dp-radius);
-  background: transparent; color: var(--dp-neutral); cursor: pointer;
+  background: transparent; color: var(--dp-secondary); cursor: pointer;
   transition: color var(--dp-dur-1) var(--dp-ease), background-color var(--dp-dur-1) var(--dp-ease),
               border-color var(--dp-dur-1) var(--dp-ease), transform var(--dp-dur-1) var(--dp-ease);
 }
@@ -238,7 +243,7 @@
   display: flex; align-items: center; gap: 0.45rem;
   margin: 0 0 0.85rem; padding-inline-start: 0.7rem;
   font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.13em;
-  text-transform: uppercase; color: var(--dp-neutral);
+  text-transform: uppercase; color: var(--dp-secondary);
 }
 .dp-toc { list-style: none; margin: 0; padding: 0; counter-reset: dptoc; }
 .dp-toc li { counter-increment: dptoc; }
@@ -261,11 +266,11 @@
   content: counter(dptoc, decimal-leading-zero);
   font-family: var(--font-mono, ui-monospace, monospace);
   font-size: 0.6875rem; font-variant-numeric: tabular-nums;
-  color: var(--dp-neutral); grid-column: 1; grid-row: 1;
+  color: var(--dp-secondary); grid-column: 1; grid-row: 1;
   transition: color var(--dp-dur-1) var(--dp-ease);
 }
 .dp-toc a b { grid-column: 2; grid-row: 1; font-weight: 500; }
-.dp-toc a i { grid-column: 2; grid-row: 2; font-style: normal; font-size: 0.75rem; color: var(--dp-neutral); }
+.dp-toc a i { grid-column: 2; grid-row: 2; font-style: normal; font-size: 0.75rem; color: var(--dp-secondary); }
 .dp-toc a:hover { color: var(--dp-ink); background: var(--dp-bg-2); }
 .dp-toc a[aria-current="true"] { color: var(--dp-ink); font-weight: 500; background: var(--dp-accent-soft); }
 .dp-toc a[aria-current="true"]::before { transform: scaleY(1); opacity: 1; }
@@ -284,7 +289,7 @@
 .dp-side__foot a {
   display: inline-flex; align-items: center; gap: 0.5rem;
   padding: 0.45rem 0; min-height: 40px;
-  font-size: 0.78125rem; color: var(--dp-neutral); text-decoration: none;
+  font-size: 0.78125rem; color: var(--dp-secondary); text-decoration: none;
   transition: color var(--dp-dur-1) var(--dp-ease);
 }
 .dp-side__foot a:hover { color: var(--dp-accent); }
@@ -356,7 +361,7 @@
   margin: 0 0 1.15rem;
   font-family: var(--font-mono, ui-monospace, monospace);
   font-size: 0.6875rem; font-weight: 500; letter-spacing: 0.12em;
-  text-transform: uppercase; color: var(--dp-neutral);
+  text-transform: uppercase; color: var(--dp-secondary);
 }
 .dp-kicker .dp-i { color: var(--dp-accent); }
 .dp-kicker span + span::before {
@@ -433,7 +438,7 @@
   display: inline-flex; align-items: center; gap: 0.4rem;
   font-family: var(--font-mono, ui-monospace, monospace);
   font-size: 0.6875rem; font-weight: 500; letter-spacing: 0.07em;
-  text-transform: lowercase; color: var(--dp-neutral);
+  text-transform: lowercase; color: var(--dp-secondary);
 }
 .dp-code__lang .dp-i { color: var(--dp-accent); opacity: 0.85; }
 .dp-code__file {
@@ -497,7 +502,7 @@
   display: inline-flex; align-items: center; gap: 0.35rem;
   height: 30px; padding: 0 0.55rem;
   border: var(--dp-hair) solid transparent; border-radius: var(--dp-radius-sm);
-  background: transparent; color: var(--dp-neutral); cursor: pointer;
+  background: transparent; color: var(--dp-secondary); cursor: pointer;
   font: 500 0.6875rem/1 var(--font-body, system-ui, sans-serif);
   letter-spacing: 0.03em;
   transition: color var(--dp-dur-1) var(--dp-ease), background-color var(--dp-dur-1) var(--dp-ease),
@@ -582,7 +587,7 @@
 
 .dp-table { border-collapse: collapse; width: 100%; font-size: 0.875rem; }
 .dp-table caption {
-  text-align: left; padding: 0.85rem 1rem; color: var(--dp-neutral);
+  text-align: left; padding: 0.85rem 1rem; color: var(--dp-secondary);
   font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.11em; text-transform: uppercase;
   border-bottom: var(--dp-hair) solid var(--dp-rule);
   background: var(--dp-bg-2);
@@ -621,7 +626,7 @@
   color: var(--dp-muted); white-space: nowrap;
 }
 .dp-type--req { color: var(--dp-accent); border-color: color-mix(in oklch, var(--dp-accent) 35%, var(--dp-rule)); background: var(--dp-accent-soft); }
-.dp-type--def { color: var(--dp-neutral); }
+.dp-type--def { color: var(--dp-secondary); }
 
 /* stacked cards below the point where an API table stops being readable */
 @media (max-width: 46rem) {
@@ -633,7 +638,7 @@
   .dp-table--stack td[data-label]::before {
     content: attr(data-label); display: block;
     font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.08em;
-    text-transform: uppercase; color: var(--dp-neutral); margin-bottom: 0.15rem;
+    text-transform: uppercase; color: var(--dp-secondary); margin-bottom: 0.15rem;
   }
   .dp-table--stack .n { text-align: left; }
 }
@@ -678,7 +683,7 @@
 .dp-anchor {
   display: inline-flex; align-items: center; justify-content: center;
   width: 1.6rem; height: 1.6rem; margin-left: 0.35rem; vertical-align: 0.05em;
-  color: var(--dp-neutral); text-decoration: none; border-radius: var(--dp-radius-sm);
+  color: var(--dp-secondary); text-decoration: none; border-radius: var(--dp-radius-sm);
   opacity: 0; transform: translateX(-3px);
   transition: opacity var(--dp-dur-2) var(--dp-ease), transform var(--dp-dur-2) var(--dp-ease), color var(--dp-dur-1) var(--dp-ease);
 }
@@ -720,7 +725,7 @@
   max-width: 84rem; margin-inline: auto;
   font-family: var(--font-mono, ui-monospace, monospace);
   font-size: 0.6875rem; line-height: 1.85; letter-spacing: 0.01em;
-  color: var(--dp-neutral);
+  color: var(--dp-secondary);
 }
 .dp-colophon__in p { max-width: 82ch; margin: 0 0 0.75rem; }
 .dp-colophon__in a { color: var(--dp-muted); }
@@ -829,7 +834,7 @@ img, svg:not(.dp-i):not(.dp-sprite) { max-width: 100%; height: auto; }
   border-top: var(--dp-hair) solid var(--dp-rule);
 }
 .dp-kv > div:last-child { border-bottom: var(--dp-hair) solid var(--dp-rule); }
-.dp-kv dt { font-size: 0.8125rem; font-weight: 600; color: var(--dp-neutral); letter-spacing: 0.02em; }
+.dp-kv dt { font-size: 0.8125rem; font-weight: 600; color: var(--dp-secondary); letter-spacing: 0.02em; }
 .dp-kv dd { margin: 0; }
 .dp-kv dd > :last-child { margin-bottom: 0; }
 @media (max-width: 34rem) {
@@ -848,7 +853,7 @@ img, svg:not(.dp-i):not(.dp-sprite) { max-width: 100%; height: auto; }
 .dp-flow__n {
   font-family: var(--font-mono, ui-monospace, monospace);
   font-size: 0.6875rem; font-variant-numeric: tabular-nums;
-  color: var(--dp-neutral); padding-top: 0.42em;
+  color: var(--dp-secondary); padding-top: 0.42em;
 }
 .dp-flow__b b { display: block; font-weight: 600; margin-bottom: 0.15rem; }
 .dp-flow__b span { color: var(--dp-muted); font-size: 0.9375rem; }
